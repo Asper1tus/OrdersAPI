@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrdersAPI.API.Dtos;
 using OrdersAPI.DAL.Interfaces;
@@ -21,6 +22,7 @@ namespace OrdersAPI.API.Controllers
 
         // GET api/orders/
         [HttpGet]
+        [Authorize]
         public ActionResult<IEnumerable<Order>> GetAllOrders()
         {
             var orderItems = ordersRepository.GetAllOrders();
@@ -29,6 +31,7 @@ namespace OrdersAPI.API.Controllers
 
         // GET api/orders/{id}
         [HttpGet("{id}")]
+        [Authorize]
         public ActionResult<Order> GetOrderById(string id)
         {
             var orderItem = ordersRepository.GetOrderById(id);
@@ -41,6 +44,7 @@ namespace OrdersAPI.API.Controllers
 
         // POST api/orders
         [HttpPost]
+        [Authorize]
         public ActionResult AddOrder(OrderCreateDto order)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);

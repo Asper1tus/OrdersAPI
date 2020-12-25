@@ -4,13 +4,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 using OrdersAPI.DAL;
 using OrdersAPI.DAL.Interfaces;
 using OrdersAPI.DAL.Repositories;
 using System;
 using System.Text.Json.Serialization;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace OrdersAPI.API
 {
@@ -26,15 +28,32 @@ namespace OrdersAPI.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers()
-                .AddJsonOptions(opts => { opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
+                .AddJsonOptions(opts =>
+                {
+                    opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                });
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer
                (Configuration.GetConnectionString("OrdersApiConnection")));
-            services.AddScoped<IOrdersRepository, OrdersRepository>();
-            services.AddSwaggerGen(swagger =>
+            services.AddScoped<IOrdersRepository, MockOrdersRepository>();
+
+            services.AddAuthentication(x =>
             {
-                swagger.SwaggerDoc("v1", new OpenApiInfo { Title = "Order API" });
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration["Jwt:Key"])),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                };
             });
         }
 
@@ -47,17 +66,12 @@ namespace OrdersAPI.API
             }
 
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-            });
-
-            app.UseSwagger();
-
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Orders API V1");
             });
         }
     }

@@ -1,4 +1,6 @@
-﻿namespace OrdersAPI.DAL.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace OrdersAPI.DAL.Models
 {
     public class Order
     {

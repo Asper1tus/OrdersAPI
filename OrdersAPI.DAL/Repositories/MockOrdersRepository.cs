@@ -7,7 +7,9 @@ namespace OrdersAPI.DAL.Repositories
 {
     public class MockOrdersRepository : IOrdersRepository
     {
-        List<Order> orders;
+        private List<Order> orders;
+        private int counter = 3;
+        
         public MockOrdersRepository()
         {
             orders = new List<Order>
@@ -19,6 +21,9 @@ namespace OrdersAPI.DAL.Repositories
         }
         public void AddOrder(Order order)
         {
+            order.Id = counter.ToString();
+            counter++;
+
             orders.Add(order);
         }
 
