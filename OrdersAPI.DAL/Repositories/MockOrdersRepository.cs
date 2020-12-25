@@ -31,5 +31,10 @@ namespace OrdersAPI.DAL.Repositories
         {
             return orders.FirstOrDefault(x => x.Id == id);
         }
+
+        public void SaveChanges()
+        {
+            return;
+        }
     }
 }

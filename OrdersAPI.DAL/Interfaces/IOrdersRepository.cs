@@ -8,5 +8,6 @@ namespace OrdersAPI.DAL.Interfaces
         public IEnumerable<Order> GetAllOrders();
         public Order GetOrderById(int id);
         public void AddOrder(Order order);
+        public void SaveChanges();
     }
 }

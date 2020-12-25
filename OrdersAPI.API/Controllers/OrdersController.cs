@@ -38,6 +38,7 @@ namespace OrdersAPI.API.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             ordersRepository.AddOrder(order);
+            ordersRepository.SaveChanges();
             return Ok(order);
 
         }
