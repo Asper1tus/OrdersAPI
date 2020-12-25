@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using OrdersAPI.API.Dtos;
 using OrdersAPI.DAL.Interfaces;
 using OrdersAPI.DAL.Models;
 
@@ -10,9 +12,11 @@ namespace OrdersAPI.API.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly IOrdersRepository ordersRepository;
-        public OrdersController(IOrdersRepository ordersRepository)
+        private readonly IMapper mapper;
+        public OrdersController(IOrdersRepository ordersRepository, IMapper mapper)
         {
             this.ordersRepository = ordersRepository;
+            this.mapper = mapper;
         }
 
         // GET api/orders/
@@ -37,13 +41,16 @@ namespace OrdersAPI.API.Controllers
 
         // POST api/orders
         [HttpPost]
-        public ActionResult AddOrder(Order order)
+        public ActionResult AddOrder(OrderCreateDto order)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            ordersRepository.AddOrder(order);
+            var orderModel = mapper.Map<Order>(new Order {Dimension = order.Dimension, DropOff = order.DropOff, Pickup = order.Pickup, Status = Status.Status1 });
+
+            ordersRepository.AddOrder(orderModel);
             ordersRepository.SaveChanges();
-            return Ok(order);
+
+            return Ok(orderModel);
 
         }
     }

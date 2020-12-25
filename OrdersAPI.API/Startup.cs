@@ -8,7 +8,9 @@ using Microsoft.OpenApi.Models;
 using OrdersAPI.DAL;
 using OrdersAPI.DAL.Interfaces;
 using OrdersAPI.DAL.Repositories;
+using System;
 using System.Text.Json.Serialization;
+using AutoMapper;
 
 namespace OrdersAPI.API
 {
@@ -25,6 +27,8 @@ namespace OrdersAPI.API
         {
             services.AddControllers()
                 .AddJsonOptions(opts => { opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer
                (Configuration.GetConnectionString("OrdersApiConnection")));
             services.AddScoped<IOrdersRepository, OrdersRepository>();

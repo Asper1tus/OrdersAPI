@@ -1,12 +1,11 @@
-﻿namespace OrdersAPI.DAL.Models
+﻿using OrdersAPI.DAL.Models;
+
+namespace OrdersAPI.API.Dtos
 {
-    public class Order
+    public class OrderCreateDto
     {
-        public string Id { get; set; }
         public string Dimension { get; set; }
-        public Status Status { get; set; }
         public Location Pickup { get; set; }
         public Location DropOff { get; set; }
-
     }
 }
