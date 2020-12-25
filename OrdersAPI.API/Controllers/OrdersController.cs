@@ -25,9 +25,13 @@ namespace OrdersAPI.API.Controllers
 
         // GET api/orders/{id}
         [HttpGet("{id}")]
-        public ActionResult<Order> GetOrderById(int id)
+        public ActionResult<Order> GetOrderById(string id)
         {
             var orderItem = ordersRepository.GetOrderById(id);
+
+            if (orderItem == null)
+                return NotFound();
+
             return Ok(orderItem);
         }
 

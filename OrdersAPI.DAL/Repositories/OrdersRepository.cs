@@ -24,7 +24,7 @@ namespace OrdersAPI.DAL.Repositories
             return context.Orders.ToList();
         }
 
-        public Order GetOrderById(int id)
+        public Order GetOrderById(string id)
         {
             return context.Orders.FirstOrDefault(p => p.Id == id);
         }

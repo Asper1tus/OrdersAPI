@@ -6,7 +6,7 @@ namespace OrdersAPI.DAL.Interfaces
     public interface IOrdersRepository
     {
         public IEnumerable<Order> GetAllOrders();
-        public Order GetOrderById(int id);
+        public Order GetOrderById(string id);
         public void AddOrder(Order order);
         public void SaveChanges();
     }
